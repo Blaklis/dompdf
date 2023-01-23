@@ -6,6 +6,8 @@
  */
 namespace Dompdf;
 
+use http\Exception\InvalidArgumentException;
+
 class Options
 {
     /**
@@ -103,7 +105,7 @@ class Options
      * North America standard is "letter"; other countries generally "a4"
      * @see \Dompdf\Adapter\CPDF::PAPER_SIZES for valid sizes
      *
-     * @var string|float[]
+     * @var string
      */
     private $defaultPaperSize = "letter";
 
@@ -789,10 +791,10 @@ class Options
     }
 
     /**
-     * @param string|float[] $defaultPaperSize
+     * @param string $defaultPaperSize
      * @return $this
      */
-    public function setDefaultPaperSize($defaultPaperSize): self
+    public function setDefaultPaperSize($defaultPaperSize)
     {
         $this->defaultPaperSize = $defaultPaperSize;
         return $this;
@@ -802,14 +804,14 @@ class Options
      * @param string $defaultPaperOrientation
      * @return $this
      */
-    public function setDefaultPaperOrientation(string $defaultPaperOrientation): self
+    public function setDefaultPaperOrientation($defaultPaperOrientation)
     {
         $this->defaultPaperOrientation = $defaultPaperOrientation;
         return $this;
     }
 
     /**
-     * @return string|float[]
+     * @return string
      */
     public function getDefaultPaperSize()
     {
@@ -819,7 +821,7 @@ class Options
     /**
      * @return string
      */
-    public function getDefaultPaperOrientation(): string
+    public function getDefaultPaperOrientation()
     {
         return $this->defaultPaperOrientation;
     }
@@ -848,6 +850,9 @@ class Options
      */
     public function setFontCache($fontCache)
     {
+        if (!is_dir($fontCache) && !mkdir($fontCache)) {
+            trigger_error("Unable to create fontCache - a valid value should be specified.", E_USER_WARNING);
+        }
         $this->fontCache = $fontCache;
         return $this;
     }
@@ -866,6 +871,9 @@ class Options
      */
     public function setFontDir($fontDir)
     {
+        if (!is_dir($fontDir) && !mkdir($fontDir)) {
+            trigger_error("Unable to create fontDir - a valid value should be specified.", E_USER_WARNING);
+        }
         $this->fontDir = $fontDir;
         return $this;
     }
@@ -1053,6 +1061,9 @@ class Options
      */
     public function setTempDir($tempDir)
     {
+        if (!is_dir($tempDir) && !mkdir($tempDir)) {
+            trigger_error("Unable to create tempDir - a valid value should be specified.", E_USER_WARNING);
+        }
         $this->tempDir = $tempDir;
         return $this;
     }
